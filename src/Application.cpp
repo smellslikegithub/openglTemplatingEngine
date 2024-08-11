@@ -27,9 +27,11 @@ int main(void)
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
-    
 
-    
+    if (glewInit() != GLEW_OK)
+        printf("%s", "Error initializing glew init");
+    else
+        printf("%s", "glew init success!");
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -52,6 +54,7 @@ int main(void)
 
 void checkOpenGlWorks() {
     
+    // Using legacy opengl way to draw a triangle. Warning, do not use this approach. I am using this to see if opengl works properly or not.
     glBegin(GL_TRIANGLES);
     glVertex2f(-0.5f, -0.5f);
     glVertex2f(0.0f, 0.5f);
