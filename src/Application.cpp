@@ -27,11 +27,27 @@ int main(void)
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
-
+    // This has to initiated after getting the opengl window context
     if (glewInit() != GLEW_OK)
         printf("%s", "Error initializing glew init");
     else
         printf("%s", "glew init success!");
+
+
+    float positions[6] = {
+       -0.5f, -0.5f,
+       0.0f, 0.5f,
+       0.5f, -0.5f
+    };
+
+    unsigned int bufferId;
+    glGenBuffers(1, &bufferId);
+    printf("The buffer Id: %i", bufferId);
+    glBindBuffer(GL_ARRAY_BUFFER, bufferId);
+    glBufferData(GL_ARRAY_BUFFER, (6 * sizeof(float)), positions, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+    glEnableVertexAttribArray(0);
+
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -39,7 +55,7 @@ int main(void)
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
         
-        checkOpenGlWorks();
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
