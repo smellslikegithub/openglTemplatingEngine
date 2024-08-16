@@ -5,69 +5,67 @@
 
 // prototypes
 void checkOpenGlWorks();
+void openGlSetup();
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+
+struct WindowDimension {
+    int width;
+    int height;
+    char* windowTitle;
+} mainWindow;
 
 int main(void)
-{
-    GLFWwindow* window;
-
-    /* Initialize the library */
-    if (!glfwInit())
+{   
+    int glfwInitStatus = glfwInit();
+    if (glfwInitStatus != GLFW_TRUE) {
+        printf("[ERROR]: Initialization of the glfwinit failed");
         return -1;
+    }
 
     
+    openGlSetup(); // Preliminary setup
 
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (!window)
-    {
+    mainWindow.width = 800;
+    mainWindow.height = 600;
+    mainWindow.windowTitle = (char *)"My First Window";
+
+    
+    GLFWwindow *window = glfwCreateWindow(mainWindow.width, mainWindow.height, mainWindow.windowTitle, NULL, NULL); // Create a simple window
+    if (window == NULL) {
+        printf("%s", "Failed to create the window");
         glfwTerminate();
         return -1;
     }
 
-    /* Make the window's context current */
     glfwMakeContextCurrent(window);
+    glViewport(0, 0, mainWindow.width, mainWindow.height);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    // This has to initiated after getting the opengl window context
-    if (glewInit() != GLEW_OK)
-        printf("%s", "Error initializing glew init");
-    else
-        printf("%s", "glew init success!");
-
-
-    float positions[6] = {
-       -0.5f, -0.5f,
-       0.0f, 0.5f,
-       0.5f, -0.5f
-    };
-
-    unsigned int bufferId;
-    glGenBuffers(1, &bufferId);
-    printf("The buffer Id: %i", bufferId);
-    glBindBuffer(GL_ARRAY_BUFFER, bufferId);
-    glBufferData(GL_ARRAY_BUFFER, (6 * sizeof(float)), positions, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
-    glEnableVertexAttribArray(0);
-
-
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
-    {
-        /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
-        
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        /* Swap front and back buffers */
+    while (!glfwWindowShouldClose(window)) {
         glfwSwapBuffers(window);
-
-        /* Poll for and process events */
         glfwPollEvents();
     }
 
+    printf("Worked till here\n");
+
     glfwTerminate();
+
     return 0;
+  
 }
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    printf("Called the framebuffer_size_callback() function with WIDTH:%i and HEIGH: %i\n", width, height);
+    glViewport(0, 0, width, height);
+}
+
+void openGlSetup() {
+    
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+}
 void checkOpenGlWorks() {
     
     // Using legacy opengl way to draw a triangle. Warning, do not use this approach. I am using this to see if opengl works properly or not.
@@ -75,5 +73,6 @@ void checkOpenGlWorks() {
     glVertex2f(-0.5f, -0.5f);
     glVertex2f(0.0f, 0.5f);
     glVertex2f(0.5f, -0.5f);
+    glColor3f(2.0f, 3.3f, 77.2f);
     glEnd();
 }
