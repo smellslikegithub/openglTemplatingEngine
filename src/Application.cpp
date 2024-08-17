@@ -1,12 +1,16 @@
 #include<GL/glew.h> // make sure this is the first include
 #include <GLFW/glfw3.h>
 #include<stdio.h>
+#include "easylogging++.h"
 
 
 // prototypes
 void checkOpenGlWorks();
 void openGlSetup();
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void processKeyboardInput(GLFWwindow* window);
+
+INITIALIZE_EASYLOGGINGPP
 
 struct WindowDimension {
     int width;
@@ -18,11 +22,11 @@ int main(void)
 {   
     int glfwInitStatus = glfwInit();
     if (glfwInitStatus != GLFW_TRUE) {
-        printf("[ERROR]: Initialization of the glfwinit failed");
+        
+        LOG(ERROR) << "Initialization of the glfwinit failed";
         return -1;
     }
 
-    
     openGlSetup(); // Preliminary setup
 
     mainWindow.width = 800;
@@ -42,6 +46,8 @@ int main(void)
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     while (!glfwWindowShouldClose(window)) {
+        
+        processKeyboardInput(window);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -52,6 +58,13 @@ int main(void)
 
     return 0;
   
+}
+
+void processKeyboardInput(GLFWwindow* window) {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        LOG(INFO) << "Key Pressed: "<< GLFW_KEY_ESCAPE<<"\n";
+        glfwSetWindowShouldClose(window, true);
+    }
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
