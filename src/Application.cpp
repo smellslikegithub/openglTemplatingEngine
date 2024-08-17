@@ -12,6 +12,14 @@ void processKeyboardInput(GLFWwindow* window);
 bool initializeGlew();
 bool initializeGlfw();
 
+// Shader
+const char* vertexShaderSource = "#version 330 core\n"
+"layout (location = 0) in vec3 aPos;\n"
+"void main()\n"
+"{\n"
+" gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"}\0";
+
 INITIALIZE_EASYLOGGINGPP
 
 struct WindowDimension {
@@ -29,7 +37,7 @@ int main(void)
 
     mainWindow.width = 800;
     mainWindow.height = 600;
-    mainWindow.windowTitle = (char *)"My First Window";
+    mainWindow.windowTitle = (char *)"OpenGl Templating Engine";
 
     
     GLFWwindow *window = glfwCreateWindow(mainWindow.width, mainWindow.height, mainWindow.windowTitle, NULL, NULL); // Create a simple window
@@ -41,7 +49,7 @@ int main(void)
 
     glfwMakeContextCurrent(window);
 
-    initializeGlew(); // The glew init has to be run to
+    initializeGlew(); 
 
     glViewport(0, 0, mainWindow.width, mainWindow.height);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -50,9 +58,43 @@ int main(void)
 
 
     /* START: Render a triangle */
-    unsigned int VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+    
+    // STEP 0: Set the vertices of the triangle
+    float vertices[] = {
+    -0.5f, -0.5f, 0.0f,
+    0.5f, -0.5f, 0.0f,
+    0.0f, 0.5f, 0.0f
+    };
+
+    // STEP 1: Send the vertices to the VERTEX SHADER by creating memory to hold the data in GPU
+    
+    // Step 1.1 Create a VBO (VERTEX BUFFER OBJECT)
+    unsigned int VBO;
+    glGenBuffers(1, &VBO); // Generate 1 buffer and store the unique id in VBO
+    
+    // Step 1.2 Bind the newly created buffer to type GL_ARRAY_BUFFER
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+    // Step 1.3 From that point on any buffer calls we make (on the GL_ARRAY_BUFFER target) will be
+    // used to configure the currently bound buffer, which is VBO.Then we can make a call to the
+    // glBufferData function that copies the previously defined vertex data into the buffer’s memory :
+
+    // glBufferData is a function specifically targeted to copy user-defined data into the currently bound buffer.
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    // Modern OpenGL requires that we at least set up a vertex and fragment shader if we want to do some rendering
+
+    // STEP 2 Setup Vertext Shader.
+    unsigned int vertexShader;
+    vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    glCompileShader(vertexShader);
+
+
+
+    // STEP 3 Setup Fragment Shader.
+
+
     /* END: Render a triangle */
 
 

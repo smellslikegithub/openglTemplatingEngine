@@ -54,6 +54,9 @@ Started reading the **LearnOpenGL.com** guide. I’m using the PDF version as my
         - In modern opengl we are required to define the **vertex** and **fragment shader** of our own.
 - Additional Implementations
     - Added logging library statically
+    - Fixed a bug where glew was not initialized
+
+- TODO: Continue from pg 33, chapter 5.5 Linking Vertex Attributes
 
 ---
 
