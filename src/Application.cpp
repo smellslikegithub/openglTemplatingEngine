@@ -47,9 +47,16 @@ int main(void)
 
     while (!glfwWindowShouldClose(window)) {
         
+        // Prosses input 
         processKeyboardInput(window);
+        
+        // Render
         glfwSwapBuffers(window);
         glfwPollEvents();
+
+
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Note: glClearColor() is a state setting
+        glClear(GL_COLOR_BUFFER_BIT); // Note: glClear() is a state using function. All of opengl is a state machine. glClear will use the settings stored in glClearColor when it is called
     }
 
     printf("Worked till here\n");

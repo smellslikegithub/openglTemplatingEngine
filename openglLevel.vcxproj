@@ -138,6 +138,9 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\Downloads\Compressed\easyloggingpp-9.97.1\easyloggingpp-9.97.1\src\easylogging++.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="readme.md" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
