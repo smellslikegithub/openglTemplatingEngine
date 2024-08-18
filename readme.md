@@ -56,7 +56,19 @@ Started reading the **LearnOpenGL.com** guide. I’m using the PDF version as my
     - Added logging library statically
     - Fixed a bug where glew was not initialized
 
-- TODO: Continue from pg 33, chapter 5.5 Linking Vertex Attributes
+### Day 4: Diving into the Learning 📖
+🗓️ *Date: 2024-8-18*
+
+Started reading the **LearnOpenGL.com** guide. I’m using the PDF version as my primary resource.
+
+**Chapter:**
+- Part 1: Getting Started
+    - Drawing Traingle best practices:
+        - Use VAOs: Encapsulate vertex attribute configuration within VAOs to simplify the management of vertex data.
+        - Bind VAOs Early: Bind VAOs before configuring VBOs and vertex attributes to ensure that all configurations are stored within the VAO.
+        - Encapsulate Shaders: Compile and link shaders into a shader program, checking for errors at every step.
+        - Efficient Drawing: Use glDrawArrays or glDrawElements depending on whether you're drawing with sequential or indexed vertices.
+        - Clean Up: Unbind VAOs and VBOs after setup to avoid unintended modifications.
 
 ---
 
