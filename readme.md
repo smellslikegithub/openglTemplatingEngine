@@ -70,6 +70,17 @@ Started reading the **LearnOpenGL.com** guide. I’m using the PDF version as my
         - Efficient Drawing: Use glDrawArrays or glDrawElements depending on whether you're drawing with sequential or indexed vertices.
         - Clean Up: Unbind VAOs and VBOs after setup to avoid unintended modifications.
 
+### Day 5: Diving into the Learning 📖
+🗓️ *Date: 2024-8-21*
+
+Started reading the **LearnOpenGL.com** guide. I’m using the PDF version as my primary resource.
+
+**Chapter: 5.6**
+- Part 1: Getting Started
+    - Draw a rectangle using two triangles. Prooving that rects are created via traingles.
+        - Element Buffer Objects    
+    - Exercises
+
 ---
 
 Stay tuned as I continue to explore and learn more about OpenGL! 💻✨
