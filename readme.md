@@ -80,6 +80,18 @@ Started reading the **LearnOpenGL.com** guide. I’m using the PDF version as my
     - Draw a rectangle using two triangles. Prooving that rects are created via traingles.
         - Element Buffer Objects    
     - Exercises
+        - Started the drawing triangle again
+
+- ### Day 6: Refactored some impl 📖
+🗓️ *Date: 2024-8-21*
+
+**Chapter: 5.6 - 5.8**
+- Refactored code.
+    - Seperated vertex shader and fragament shader code
+    - created utilities to read shader from disk to ram
+- Exercise:
+    - Draw two triangles. Done 
+
 
 ---
 

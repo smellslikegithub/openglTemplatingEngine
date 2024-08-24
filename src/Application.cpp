@@ -1,8 +1,10 @@
 #include<GL/glew.h> // make sure this is the first include
 #include <GLFW/glfw3.h>
 #include<stdio.h>
-#include "easylogging++.h"
+#include "easylogging++.h" // Not using this for now. Relying on std::cout
+#include"../common/shader.hpp"
 
+INITIALIZE_EASYLOGGINGPP
 
 // prototypes
 void checkOpenGlWorks();
@@ -12,24 +14,8 @@ void processKeyboardInput(GLFWwindow* window);
 bool initializeGlew();
 bool initializeGlfw();
 
-// Shaders
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragRedColor;\n"
-"void main()\n"
-"{\n"
-"   //FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-"	FragRedColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);  // Red color\n"
-"}\n\0";
 
-INITIALIZE_EASYLOGGINGPP
-
-struct WindowDimension {
+struct WindowAttrib {
 	int width;
 	int height;
 	char* windowTitle;
@@ -60,109 +46,49 @@ int main(void)
 
 	glViewport(0, 0, mainWindow.width, mainWindow.height);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-	/* START: Prep a triangle */
-
-	// Step 1: Create the vertex data
+	
 
 
-	float vertices[] = {
-		0.5f, 0.5f, 0.0f, // top right
-		0.5f, -0.5f, 0.0f, // bottom right
-		-0.5f, -0.5f, 0.0f, // bottom left
-		-0.5f, 0.5f, 0.0f // top left
+	// Exercise 1: Draw Two Triangles
+
+	GLfloat vertices[] = {
+		-0.5f, 1.0f,
+		-1.0f, 0.0f,
+		0.0f, 0.0f,
+
+		0.0f, 0.0f,
+		0.5f, -1.0f,
+		1.0f, 0.0f
 	};
 
-	unsigned int indices[] = { // note that we start from 0!
-		0, 1, 3, // first triangle
-		1, 2, 3 // second triangle
-	};
 
-	// Step 3: Generate and bind VAO so that any subsequent calls to configure vertex attributes or bind buffers
-	// are stored in this VAO
 	unsigned int VAO;
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
+	
+	unsigned int vertexBufferObject;
+	glGenBuffers(1, &vertexBufferObject);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
 
-	// Generate the VBO and add the vertex data to the buffer
-	unsigned int VBO;
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	
 
-	unsigned int EBO;
-	glGenBuffers(1, &EBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	// Step 4: Define the Vertext Attribute Pointers; For simplicity, it describes how the VBO data is I.e., its size, stride etc 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-	// Step 5: Create and Compile Shaders
-	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	glCompileShader(vertexShader);
-
-	// Check for compilation errors
-	int success;
-	char infoLog[512];
-
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success) {
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-	// Check for compilation errors
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success) {
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-	// Fragment Shader
-	unsigned int fragmentShader;
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	glCompileShader(fragmentShader);
-
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+	const char* pathToVertextShader = "shaders\\vertexShader.vert";
+	const char* pathToFragmentShader = "shaders\\fragmentShader.frag";
+	
+	
+	const GLuint shaderProgramId = LoadShadersFromFile(pathToVertextShader, pathToFragmentShader);
+	glUseProgram(shaderProgramId);
 
 
-	if (!success) {
-		glGetShaderInfoLog(fragmentShader, sizeof(infoLog), NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" <<
-			infoLog << std::endl;
-	}
-
-	// Shader Program
-	unsigned int shaderProgram;
-	shaderProgram = glCreateProgram();
-
-	// STEP 6 Attach previously compiled shaders to the Shader Program.
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if (!success) {
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::COMPILATION_FAILED\n" <<
-			infoLog << std::endl;
-	}
-	/*Every shader and rendering call after glUseProgram will now use this program object(and
-	 thus the shaders).*/
-	glUseProgram(shaderProgram);
-
-	// We no longer need the shaders anymore since it is loaded into the program.
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//const char* pathToVertextShader = "C:\\Users\\Ashish Husain\\source\\repos\\openglLevel\\src\\vertexShader.vert";
 
 
-	/* END: Prep a triangle */
+
 
 	while (!glfwWindowShouldClose(window)) {
 
@@ -173,13 +99,8 @@ int main(void)
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Note: glClearColor() is a state setting
 		glClear(GL_COLOR_BUFFER_BIT); // Note: glClear() is a state using function. All of opengl is a state machine. glClear will use the settings stored in glClearColor when it is called
 
-
-		// draw our first triangle
-		glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-		glUseProgram(shaderProgram);
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);

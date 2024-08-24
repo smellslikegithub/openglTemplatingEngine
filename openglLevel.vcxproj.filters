@@ -18,13 +18,21 @@
     <ClCompile Include="src\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="common\shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Downloads\Compressed\easyloggingpp-9.97.1\easyloggingpp-9.97.1\src\easylogging++.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="common\shader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.md" />
+    <None Include="x64\Release\shaders\vertexShader.vert" />
+    <None Include="x64\Release\shaders\fragmentShader.frag" />
   </ItemGroup>
 </Project>

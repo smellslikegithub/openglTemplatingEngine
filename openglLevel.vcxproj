@@ -133,13 +133,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="common\shader.cpp" />
     <ClCompile Include="src\Application.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Downloads\Compressed\easyloggingpp-9.97.1\easyloggingpp-9.97.1\src\easylogging++.h" />
+    <ClInclude Include="common\shader.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="readme.md" />
+    <None Include="x64\Release\shaders\fragmentShader.frag" />
+    <None Include="x64\Release\shaders\vertexShader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
