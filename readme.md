@@ -83,7 +83,7 @@ Started reading the **LearnOpenGL.com** guide. I’m using the PDF version as my
         - Started the drawing triangle again
 
 - ### Day 6: Refactored some impl 📖
-🗓️ *Date: 2024-8-21*
+🗓️ *Date: 2024-8-24*
 
 **Chapter: 5.6 - 5.8**
 - Refactored code.
