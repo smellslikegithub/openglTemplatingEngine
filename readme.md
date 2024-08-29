@@ -90,7 +90,15 @@ Started reading the **LearnOpenGL.com** guide. I’m using the PDF version as my
     - Seperated vertex shader and fragament shader code
     - created utilities to read shader from disk to ram
 - Exercise:
-    - Draw two triangles. Done 
+    - Draw two triangles. Done
+
+- ### Day 7: Refactored some impl 📖
+🗓️ *Date: 2024-8-29*
+
+**Chapter: 5.6 - 5.8**
+- Exercise:
+    - Draw two triangles using GL_ELEMENT_ARRAY_BUFFER
+    - Drew W pattern 
 
 
 ---

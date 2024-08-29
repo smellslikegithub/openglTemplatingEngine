@@ -13,6 +13,10 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processKeyboardInput(GLFWwindow* window);
 bool initializeGlew();
 bool initializeGlfw();
+void wireframeModeOn(); // For debugging/inspecting triangle wireframe
+void wireframeModeOff();// For turning off debugging/inspecting triangle wireframe. Explicitly OFF.
+
+
 
 
 struct WindowAttrib {
@@ -31,6 +35,7 @@ int main(void)
 	mainWindow.width = 800;
 	mainWindow.height = 600;
 	mainWindow.windowTitle = (char*)"OpenGl Templating Engine";
+	
 
 
 	GLFWwindow* window = glfwCreateWindow(mainWindow.width, mainWindow.height, mainWindow.windowTitle, NULL, NULL); // Create a simple window
@@ -51,22 +56,24 @@ int main(void)
 
 	// Exercise 1: Draw Two Triangles
 
-	GLfloat vertices[] = {
-		-0.5f, 1.0f,
-		-1.0f, 0.0f,
-		0.0f, 0.0f,
+	wireframeModeOff();
 
-		0.0f, 0.0f,
-		0.5f, -1.0f,
-		1.0f, 0.0f
+	GLfloat vertices[] = {
+		-0.5f, -1.0f, //0
+		-1.0f, 0.0f, //	1
+		0.0f, 0.0f, //	2
+
+		0.5f, -1.0f,//	3
+		1.0f, 0.0f //	4
 	};
+
 
 
 	unsigned int VAO;
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 	
-	unsigned int vertexBufferObject;
+	unsigned int vertexBufferObject; // VBO
 	glGenBuffers(1, &vertexBufferObject);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
 
@@ -75,7 +82,20 @@ int main(void)
 	
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	// The first param that is zero in this code kind of tells opengl that the vertex shader data for the vertex data we provide can be found in the 0th index. 
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+
+
+	GLushort indices[] = {1,2,0,  2,3,4}; //W
+
+
+	GLuint indexBufferId;
+	glGenBuffers(1, &indexBufferId);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId);
+	
+	// typedef void (GLAPIENTRY * PFNGLBUFFERSUBDATAPROC) (GLenum target, GLintptr offset, GLsizeiptr size, const void* data);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
 
 	const char* pathToVertextShader = "shaders\\vertexShader.vert";
 	const char* pathToFragmentShader = "shaders\\fragmentShader.frag";
@@ -85,9 +105,7 @@ int main(void)
 	glUseProgram(shaderProgramId);
 
 
-	//const char* pathToVertextShader = "C:\\Users\\Ashish Husain\\source\\repos\\openglLevel\\src\\vertexShader.vert";
-
-
+	
 
 
 	while (!glfwWindowShouldClose(window)) {
@@ -99,7 +117,8 @@ int main(void)
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // Note: glClearColor() is a state setting
 		glClear(GL_COLOR_BUFFER_BIT); // Note: glClear() is a state using function. All of opengl is a state machine. glClear will use the settings stored in glClearColor when it is called
 
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		//glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 		
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
@@ -171,4 +190,11 @@ void checkOpenGlWorks() {
 	glVertex2f(0.5f, -0.5f);
 	glColor3f(2.0f, 3.3f, 77.2f);
 	glEnd();
+}
+
+void wireframeModeOn() {
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+}
+void wireframeModeOff() {
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

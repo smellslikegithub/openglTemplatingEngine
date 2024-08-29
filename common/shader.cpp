@@ -29,7 +29,7 @@ std::string static _getContentsFromFile(const char* filePath){
 	std::string line;
 	while (std::getline(file, line)) {
 		// Process the line
-		std::cout << line << std::endl; 
+		//std::cout << line << std::endl; 
 		accumulatedContent += "\n" + line;
 	}
 
@@ -104,7 +104,7 @@ GLuint LoadShadersFromFile(const char* vertexShaderFilePath, const char* fragmen
 		glDeleteShader(fragmentShader);
 
 
-
+		std::cout << "Shaders loaded at address: "<<&shaderProgram<<std::endl;
 		return shaderProgram;
 		
 
